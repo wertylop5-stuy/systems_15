@@ -9,11 +9,11 @@ phone: phone.o
 	gcc -o phone phone.o
 	make clean
 
-phone.o: phone.c
-	gcc -c phone.c
+phone.o: phone.c consts.h
+	gcc -c phone.c consts.h
 
-control.o: control.c
-	gcc -c control.c
+control.o: control.c consts.h
+	gcc -c control.c consts.h
 
 clean:
 	rm *.o
