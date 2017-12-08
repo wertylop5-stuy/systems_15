@@ -1,4 +1,4 @@
-all: control.o phone.o
+all:
 	make control phone
 
 control: control.o
