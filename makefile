@@ -1,3 +1,6 @@
+all: control.o phone.o
+	make control phone
+
 control: control.o
 	gcc -o control control.o
 
