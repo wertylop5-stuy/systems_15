@@ -1,6 +1,12 @@
-phone: main.o
-	gcc -o phone main.o
+control: control.o
+	gcc -o control control.o
 
-main.o: main.c
-	gcc -c main.c
+phone: phone.o
+	gcc -o phone phone.o
+
+phone.o: phone.c
+	gcc -c phone.c
+
+control.o: control.c
+	gcc -c control.c
 
