@@ -10,6 +10,7 @@
 #include <sys/ipc.h>
 #include <sys/types.h>
 
+//all of our defines are in here
 #include"include/consts.h"
 
 //helper fxns
@@ -20,7 +21,8 @@ int set_semaphore(int id, int val){
 int create(){
 	//1. CREATING SHARED MEMORY
 	int shmd_id;
-	shmd_id = shmget(SHMKEY, sizeof(double), IPC_CREAT | 0600);
+	shmd_id = shmget(SHMKEY, LINE_BUF_SIZE, IPC_CREAT | 0600);
+	printf("created shared mem: %d\n", shmd_id);
 	int * size_of_prev;
 	size_of_prev = shmat(shmd_id, NULL, 0600);
 
