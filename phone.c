@@ -10,11 +10,6 @@
 
 #include"include/consts.h"
 
-#define SEMKEY 123
-#define SHMKEY 456
-#define FILENAME ""
-#define LINE_BUF_SIZE 512
-
 union semun {
 	int val;
 	struct semid_ds *buf;
@@ -36,8 +31,9 @@ int main() {
 	}
 	printf("[%d] got semaphore\n", semd);
 	
-	char line_buf[LINE_BUF_SIZE];
-	int shmd = shmget(SHMKEY, sizeof(line_buf), 0600);
+	char *line_buf;
+	int shmd = shmget(SHMKEY, LINE_BUF_SIZE, 0600);
+	
 	
 	
 	return 0;
