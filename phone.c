@@ -8,7 +8,7 @@
 #include<sys/sem.h>
 #include<sys/shm.h>
 
-#include"consts.h"
+#include"include/consts.h"
 
 #define SEMKEY 123
 #define SHMKEY 456
@@ -36,8 +36,8 @@ int main() {
 	}
 	printf("[%d] got semaphore\n", semd);
 	
-	char line_buf[LINE_BUF_SIZE]
-	int shmd = shmget(SHMKEY, sizeof());
+	char line_buf[LINE_BUF_SIZE];
+	int shmd = shmget(SHMKEY, sizeof(line_buf), 0600);
 	
 	
 	return 0;

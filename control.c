@@ -10,8 +10,7 @@
 #include <sys/ipc.h>
 #include <sys/types.h>
 
-#define SEMKEY 123
-#define SHMKEY 456
+#include"include/consts.h"
 
 //helper fxns
 int set_semaphore(int id, int val){
