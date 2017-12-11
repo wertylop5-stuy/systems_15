@@ -15,9 +15,17 @@
 //all of our defines are in here
 #include"include/consts.h"
 
+union semun {
+	int val;
+	struct semid_ds *buf;
+	unsigned short *array;
+	struct seminfo *__buf;
+} su;
+
 //helper fxns
 int set_semaphore(int id, int val){
-  return semctl(id, 0, SETVAL, val);
+	su.val = val;
+  return semctl(id, 0, SETVAL, su.val);
 }
 
 int create(){
