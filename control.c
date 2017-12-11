@@ -25,7 +25,7 @@ union semun {
 //helper fxns
 int set_semaphore(int id, int val){
 	su.val = val;
-  return semctl(id, 0, SETVAL, su.val);
+  return semctl(id, 0, SETVAL, su);
 }
 
 int create(){
