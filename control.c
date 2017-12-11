@@ -45,7 +45,7 @@ int create(){
 
 	//3. OPENING FILE
 
-	int fd = open(FILE_NAME, O_CREAT | O_EXCL | O_TRUNC, 0644);
+	int fd = open(FILE_NAME, O_CREAT | O_TRUNC, 0644);
 	if (fd == -1) {
 		printf("%d: %s\n", errno, strerror(errno));
 	}
