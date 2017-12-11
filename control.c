@@ -9,6 +9,8 @@
 #include <sys/shm.h>
 #include <sys/ipc.h>
 #include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 //all of our defines are in here
 #include"include/consts.h"
@@ -22,7 +24,7 @@ int create(){
 	//1. CREATING SHARED MEMORY
 	int shmd_id;
 	shmd_id = shmget(SHMKEY, LINE_BUF_SIZE, IPC_CREAT | 0600);
-	printf("created shared mem: %d\n", shmd_id);
+	printf("getting shared mem: %d\n", shmd_id);
 	int * size_of_prev;
 	size_of_prev = shmat(shmd_id, NULL, 0600);
 
@@ -38,11 +40,59 @@ int create(){
   }
   else {
     printf("semaphore already exists!\n");
+	return -1;
   }
 
 	//3. OPENING FILE
 
+	int fd = open(FILE_NAME, O_CREAT | O_EXCL | O_TRUNC, 0644);
+	if (fd == -1) {
+		printf("%d: %s\n", errno, strerror(errno));
+	}
+	close(fd);
+	
 	return shmd_id;
+}
+
+void view(void) {
+	int fd = open(FILE_NAME, O_RDONLY);
+	if (fd == -1) {
+		printf("%d: %s\n", errno, strerror(errno));
+		return;
+	}
+	char data[1024];
+	data[read(fd, data, sizeof(data))] = 0;
+	close(fd);
+	
+	printf("story contents:\n%s", data);
+}
+
+void r(void) {
+	int semd = semget(SEMKEY, 1, 0600);
+	struct sembuf buf = {0, -1, SEM_UNDO};
+	
+	printf("[%d] getting semaphore\n", semd);
+	if (semop(semd, &buf, 1) == -1) {
+		printf("%d: %s\n", errno, strerror(errno));
+		return;
+	}
+	printf("[%d] got semaphore\n", semd);
+
+	if (semctl(semd, 0, IPC_RMID) == -1) {
+		printf("%d: %s\n", errno, strerror(errno));
+	}
+	printf("[%d] Removed semaphore\n", semd);
+	
+	int shmd = shmget(SHMKEY, LINE_BUF_SIZE, 0600);
+	if (shmctl(shmd, IPC_RMID, 0) == -1) {
+		printf("%d: %s\n", errno, strerror(errno));
+	}
+	printf("[%d] Removed shared mem\n", shmd);
+	
+	view();
+	
+	//remove the story file
+	remove(FILE_NAME);
 }
 
 int main(int numargs, char ** args) {
@@ -53,12 +103,12 @@ int main(int numargs, char ** args) {
 		if (strcmp(args[1], "-c") == 0){
 			printf("%d\n", create());
 		}
-		// if (strcmp(args[1], "-v") == 0){
-		// 	view();
-		// }
-		// if (strcmp(args[1], "-r") == 0){
-		// 	remove();
-		// }
+		else if (strcmp(args[1], "-v") == 0){
+			view();
+		}
+		if (strcmp(args[1], "-r") == 0){
+		 	r();
+		}
 	}
 	return 0;
 }
